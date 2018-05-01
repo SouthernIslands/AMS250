@@ -5,7 +5,7 @@
 static long num_steps = 100000000;
 
 int main(){
-double x, pi, step, timespend, sum=0.0;
+double x, pi, step, sum=0.0;
 double start, stop, timespend;
 struct timeval tv;
 int i,tid,nthreads;
