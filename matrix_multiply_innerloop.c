@@ -5,8 +5,10 @@
 #include <stdio.h>
 #include <time.h>
 
-#define N 1600
+#define N 100 //Scale at 100 has already took me 3 seconds
 
+int a[N][N];
+int b[N][N];
 int res[N][N];
 
 int main(){
@@ -21,8 +23,8 @@ int main(){
       for (j = 0; j<N ; j++){
             a[i][j] = c++;
             b[i][j] = d++;
-	}
-
+     	}
+}
   gettimeofday(&tv,NULL);
   start = (tv.tv_sec)*1000 + (tv.tv_usec)/1000;
 
