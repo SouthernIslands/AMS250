@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#define N 100 //Scale at 100 has already took me 3 seconds
+#define N 1600 //Scale at 100 has already took me 3 seconds
 
 int a[N][N];
 int b[N][N];
