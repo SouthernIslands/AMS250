@@ -4,6 +4,8 @@
 int main(int argc,char *argv[]){
     int message;
     int size, rank, prev, next, tag;
+    MPI_Status recv_status, send_status;
+    MPI_Request send_request;
     
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -19,13 +21,13 @@ int main(int argc,char *argv[]){
         
         printf("Master process (Process 0) initating message %d send to %d of %d Process ring\n", 
         message, next, size);
-        MPI_Send(&message, 1, MPI_INT, next, tag, MPI_COMM_WORLD); 
+        MPI_Isend(&message, 1, MPI_INT, next, tag, MPI_COMM_WORLD, &send_request); 
     }
 
 
     while (1) {
         MPI_Recv(&message, 1, MPI_INT, prev, tag, MPI_COMM_WORLD, 
-            MPI_STATUS_IGNORE);
+            &recv_status);
         printf("Process %d received message %d from process %d\n",
         rank, message, prev);
 
@@ -39,7 +41,7 @@ int main(int argc,char *argv[]){
 
         printf("Process %d sended message %d to process %d\n",
         rank, message, next);
-        MPI_Send(&message, 1, MPI_INT, next, tag, MPI_COMM_WORLD);
+        MPI_Isend(&message, 1, MPI_INT, next, tag, MPI_COMM_WORLD, &send_request);
 
         if (message == 0) {
            
@@ -52,7 +54,7 @@ int main(int argc,char *argv[]){
 
     if (rank == 0) {
             MPI_Recv(&message, 1, MPI_INT, prev, tag, MPI_COMM_WORLD, 
-                MPI_STATUS_IGNORE);
+                &recv_status);
             printf("****Final receive before program ends****\n");
     }
 
