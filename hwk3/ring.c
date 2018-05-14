@@ -17,7 +17,7 @@ int main(int argc,char *argv[]){
     if (rank == 0) {
         message = 16;
         
-        printf("Master process (Rank 0) initating message %d send to %d of %d process ring\n", 
+        printf("Master process (Process 0) initating message %d send to %d of %d Process ring\n", 
         message, next, size);
         MPI_Send(&message, 1, MPI_INT, next, tag, MPI_COMM_WORLD); 
     }
@@ -40,7 +40,7 @@ int main(int argc,char *argv[]){
         MPI_Send(&message, 1, MPI_INT, next, tag, MPI_COMM_WORLD);
 
         if (message == 0) {
-            printf("Exiting the loop at process %d\n", rank);
+            printf("Process %d\n quitting the ring", rank);
             break;
     }
   }
