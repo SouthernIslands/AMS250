@@ -28,7 +28,7 @@ int main(int argc,char *argv[]){
     while (1) {
         MPI_Recv(&message, 1, MPI_INT, prev, tag, MPI_COMM_WORLD, 
             &recv_status);
-        MPI_Wait(&send_request,&send_status);
+        
         printf("Process %d received message %d from process %d\n",
         rank, message, prev);
 
@@ -56,7 +56,7 @@ int main(int argc,char *argv[]){
     if (rank == 0) {
             MPI_Recv(&message, 1, MPI_INT, prev, tag, MPI_COMM_WORLD, 
                 &recv_status);
-            MPI_Wait(&send_request,&send_status);
+            
             printf("****Final receive before program ends****\n");
     }
 
