@@ -31,7 +31,9 @@ int main(int argc,char *argv[]){
 
         if (rank == 0){
             message--;
+            printf("-----------------------------------------\n");
             printf("Message decrese to %d at master process\n", message);
+            printf("-----------------------------------------\n");
         }
         
 
@@ -40,7 +42,8 @@ int main(int argc,char *argv[]){
         MPI_Send(&message, 1, MPI_INT, next, tag, MPI_COMM_WORLD);
 
         if (message == 0) {
-            printf("Process %d\n quitting the ring", rank);
+           
+            printf("Process %d quitting the ring\n", rank);
             break;
     }
   }
@@ -50,7 +53,7 @@ int main(int argc,char *argv[]){
     if (rank == 0) {
             MPI_Recv(&message, 1, MPI_INT, prev, tag, MPI_COMM_WORLD, 
                 MPI_STATUS_IGNORE);
-            printf("Final receive before program ends\n");
+            printf("****Final receive before program ends****\n");
     }
 
     MPI_Finalize();
