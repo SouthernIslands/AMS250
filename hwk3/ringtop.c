@@ -36,10 +36,12 @@ int main(int argc,char *argv[]){
                 printf("Message decrese to %d at master process\n", message);
                 printf("-----------------------------------------\n");
             }
-        printf("Process %d sended message %d to process %d\n",
-            rank, message, next);
+        
+        
         MPI_Isend(&message, 1, MPI_INT, next, tag, MPI_COMM_WORLD, &reqs[0]);
         MPI_Wait(&reqs[0], &stats[0]);
+        printf("Process %d sended message %d to process %d\n",
+            rank, message, next);
 
         if (message == 0) {
             
@@ -57,7 +59,7 @@ int main(int argc,char *argv[]){
             printf("****Final receive before program ends****\n");
     }
 
-    MPI_Waitall(2, reqs, stats);
+    //MPI_Waitall(2, reqs, stats);
     MPI_Finalize();
     return 0;
 }
