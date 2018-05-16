@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 int main(int argc,char *argv[]){
-    int n;
+    int i;
     int size, rank, tag=1;
     double start, end, time;
     int *msgsend = (int *) malloc(10000*sizeof(int));
@@ -18,7 +18,7 @@ int main(int argc,char *argv[]){
     if(rank == 0){
 
       start = MPI_Wtime();
-      for(n = 1; n <= 100 ; i++){
+      for(i = 1; i <= 100 ; i++){
         MPI_Send(&msgsend[0], 1, MPI_INT, 1, tag, MPI_COMM_WORLD);
         MPI_Recv(&msgrecv[0], 1, MPI_INT, 1, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
       }
@@ -28,7 +28,7 @@ int main(int argc,char *argv[]){
       printf("Average time is %f seconds\n", time/100);
     }
     if(rank == 1){
-      for(n = 1; n <= 100 ; i++){
+      for(i = 1; i <= 100 ; i++){
         MPI_Recv(&msgrecv[0], 1, MPI_INT, 1, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Send(&msgsend[0], 1, MPI_INT, 1, tag, MPI_COMM_WORLD);
       }
