@@ -15,7 +15,7 @@ int main (int argc, char* argv[]){
     srand(time(NULL));
     average = ((long)N/size);
 
-    for (i = rank ; i < average ; i++){
+    for (i = 0 ; i < average ; i++){
         x=((double)rand()/RAND_MAX);
         y=((double)rand()/RAND_MAX);
 
