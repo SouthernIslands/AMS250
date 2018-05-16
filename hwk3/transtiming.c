@@ -9,13 +9,17 @@ int main(int argc,char *argv[]){
     double start, end, time;
     int *msgsend = (int *) malloc(L*sizeof(int));
     int *msgrecv = (int *) malloc(L*sizeof(int));
-
+     
+    start = MPI_Wtime();
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
 
     MPI_Barrier(MPI_COMM_WORLD);
+    end = MPI_Wtime();
+    printf("Setup time is %f seconds\n", end-start);
+    
     if(rank == 0){
         while(len <= L){
           start = MPI_Wtime();
@@ -32,8 +36,9 @@ int main(int argc,char *argv[]){
       len = len*100;  
       }  
     }
+
     if(rank == 1){
-      while(len <= N){
+      while(len <= L){
       for(i = 1; i <= N ; i++){
         MPI_Recv(&msgrecv[0], len, MPI_INT, 0, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Send(&msgsend[0], len, MPI_INT, 0, tag, MPI_COMM_WORLD);
