@@ -1,6 +1,7 @@
-#include <time.h>
 #include "mpi.h"
 #include <stdio.h>
+#define N 1000
+#define L 1000
 
 int main(int argc,char *argv[]){
     int i;
@@ -18,9 +19,9 @@ int main(int argc,char *argv[]){
     if(rank == 0){
 
       start = MPI_Wtime();
-      for(i = 1; i <= 100 ; i++){
-        MPI_Send(&msgsend[0], 1, MPI_INT, 1, tag, MPI_COMM_WORLD);
-        MPI_Recv(&msgrecv[0], 1, MPI_INT, 1, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      for(i = 1; i <= N ; i++){
+        MPI_Send(&msgsend[0], L, MPI_INT, 1, tag, MPI_COMM_WORLD);
+        MPI_Recv(&msgrecv[0], L, MPI_INT, 1, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
       }
       end = MPI_Wtime();
       time = end - start;
@@ -28,9 +29,9 @@ int main(int argc,char *argv[]){
       printf("Average time is %f seconds\n", time/100);
     }
     if(rank == 1){
-      for(i = 1; i <= 100 ; i++){
-        MPI_Recv(&msgrecv[0], 1, MPI_INT, 1, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        MPI_Send(&msgsend[0], 1, MPI_INT, 1, tag, MPI_COMM_WORLD);
+      for(i = 1; i <= N ; i++){
+        MPI_Recv(&msgrecv[0], L, MPI_INT, 0, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Send(&msgsend[0], L, MPI_INT, 0, tag, MPI_COMM_WORLD);
       }
     }
 
