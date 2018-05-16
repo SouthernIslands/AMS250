@@ -6,7 +6,7 @@
 int main(int argc,char *argv[]){
     int i, len = 1;
     int size, rank, tag=1;
-    double start, end, time;
+    double start, end, time, setup;
     int *msgsend = (int *) malloc(L*sizeof(int));
     int *msgrecv = (int *) malloc(L*sizeof(int));
      
@@ -18,7 +18,8 @@ int main(int argc,char *argv[]){
 
     MPI_Barrier(MPI_COMM_WORLD);
     end = MPI_Wtime();
-    printf("Setup time is %f seconds\n", end-start);
+    setup = end - start;
+    printf("Setup time is %f seconds\n",setup);
     
     if(rank == 0){
         while(len <= L){
@@ -32,8 +33,7 @@ int main(int argc,char *argv[]){
 
           printf("Average time is %f seconds\n", time/N);
           printf("While message length is %d \n", len);  
-        } 
-      len = len*100;  
+          len = len*100;  
       }  
     }
 
