@@ -10,16 +10,12 @@ int main(int argc,char *argv[]){
     int *msgsend = (int *) malloc(L*sizeof(int));
     int *msgrecv = (int *) malloc(L*sizeof(int));
      
-    start = MPI_Wtime();
+   
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-
     MPI_Barrier(MPI_COMM_WORLD);
-    end = MPI_Wtime();
-    setup = end - start;
-    printf("Setup time is %f seconds\n",setup);
     
     if(rank == 0){
         while(len <= L){
@@ -32,9 +28,9 @@ int main(int argc,char *argv[]){
           time = end - start;
 
           printf("Average time is %f seconds\n", time/N);
-          printf("While message length is %d \n", len);  
+          printf("While the message length is %d \n", len);  
           len = len*100;  
-      }  
+       }  
     }
 
     if(rank == 1){
