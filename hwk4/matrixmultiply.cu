@@ -16,10 +16,12 @@ void MatMulKernel(Matrix A, Matrix B, Matrix C)
     float Cvalue = 0;
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;
+    if(row < A.height && col < B.width){
     for (int e = 0; e < A.width; ++e)
         Cvalue += A.elements[row * A.width + e]
                 * B.elements[e * B.width + col];
     C.elements[row * C.width + col] = Cvalue;
+  }
 }
 
 // Matrix multiplication - Host code
@@ -33,6 +35,7 @@ void MatMul(const Matrix A, const Matrix B, Matrix C)
     size_t size_a = A.width * A.height * sizeof(float);
     cudaMalloc((void **)&d_A.elements, size_a);
     cudaMemcpy(d_A.elements, A.elements, size_a, cudaMemcpyHostToDevice);
+
     Matrix d_B;
     d_B.width = B.width;
     d_B.height = B.height;
@@ -53,6 +56,7 @@ void MatMul(const Matrix A, const Matrix B, Matrix C)
   //  dim3 dimGrid(B.width / dimBlock.x, A.height / dimBlock.y);
     MatMulKernel<<<dimGrid, dimBlock>>>(d_A, d_B, d_C);
 
+    //cudaDeviceSynchronize();
     // Read C from device memory
     cudaMemcpy(C.elements, d_C.elements, size_c, cudaMemcpyDeviceToHost);
 
