@@ -158,11 +158,11 @@ int main(int argc, char **argv){
     }
   
     for(int i = 0 ; i < A.width*A.height ; i++ ){
-          printf("%1.f\t", A.elements[i]);
+          printf("%.1\t", A.elements[i]);
           if((i % A.width ) == A.width - 1){printf("\n");}
     }
     for(int i = 0 ; i < B.width*B.height ; i++ ){
-          printf("%1.f\t", B.elements[i]);
+          printf("%.1f\t", B.elements[i]);
           if((i % B.width ) == B.width - 1){printf("\n");}
     }
     printf("========================================================\n");
@@ -179,7 +179,7 @@ int main(int argc, char **argv){
     MatMul(A, B, C);
   
     for(int i = 0 ; i < C.width*C.height ; i++ ){
-          printf("%1.f\t", C.elements[i]);
+          printf("%.1f\t", C.elements[i]);
           if((i % C.width ) == C.width - 1){printf("\n");}
     }
   
