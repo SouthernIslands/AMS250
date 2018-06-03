@@ -1,3 +1,8 @@
+/**
+* Base on example codes of CUDA Documentation
+* https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#shared-memory
+**/
+
 #include <stdio.h>
 #include <stdlib.h>
 #define BLOCK_SIZE 16
@@ -24,14 +29,16 @@ __device__ void SetElement(Matrix A, int row, int col, float value)
 // Get the BLOCK_SIZExBLOCK_SIZE sub-matrix Asub of A that is
 // located col sub-matrices to the right and row sub-matrices down
 // from the upper-left corner of A
- __device__ Matrix GetSubMatrix(Matrix A, int row, int col) //index of blockrow and blockcol
-{
+
+ __device__ Matrix GetSubMatrix(Matrix A, int row, int col) 
+{//index of blockrow and blockcol
     Matrix Asub;
     Asub.width    = BLOCK_SIZE;
     Asub.height   = BLOCK_SIZE;
     Asub.stride   = A.stride;
     Asub.elements = &A.elements[A.stride * BLOCK_SIZE * row
-                                         + BLOCK_SIZE * col];//one dimensions memory layout
+                                         + BLOCK_SIZE * col];
+    //one dimension memory layout
     return Asub;
 }
 
@@ -139,7 +146,7 @@ int main(int argc, char **argv){
     A.height = 32;
     A.elements = (float*) malloc(A.width*A.height*sizeof(float));
     for(int i = 0 ; i < A.width*A.height ; i++ ){
-        A.elements[i] = float(i);
+        A.elements[i] = float(i%A.width);
     }
   
     Matrix B;
@@ -147,18 +154,18 @@ int main(int argc, char **argv){
     B.height = 32;
     B.elements = (float*) malloc(B.width*B.height*sizeof(float));
     for(int i = 0 ; i < B.width*B.height ; i++ ){
-        B.elements[i] = float(i);
+        B.elements[i] = float(i%B.width);
     }
   
     for(int i = 0 ; i < A.width*A.height ; i++ ){
-          printf("%f\t", A.elements[i]);
+          printf("%1.f\t", A.elements[i]);
           if((i % A.width ) == A.width - 1){printf("\n");}
     }
     for(int i = 0 ; i < B.width*B.height ; i++ ){
-          printf("%f\t", B.elements[i]);
+          printf("%1.f\t", B.elements[i]);
           if((i % B.width ) == B.width - 1){printf("\n");}
     }
-    printf("=========================================\n");
+    printf("========================================================\n");
   
   
     Matrix C;
@@ -172,7 +179,7 @@ int main(int argc, char **argv){
     MatMul(A, B, C);
   
     for(int i = 0 ; i < C.width*C.height ; i++ ){
-          printf("%1f\t", C.elements[i]);
+          printf("%1.f\t", C.elements[i]);
           if((i % C.width ) == C.width - 1){printf("\n");}
     }
   
