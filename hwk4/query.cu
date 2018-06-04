@@ -8,8 +8,8 @@
 void showDevice(const cudaDeviceProp &prop)
 {
     printf("Device Name : %s\n", prop.name);
-    printf("Major revision number:     %d\n",  devProp.major);
-    printf("Minor revision number:     %d\n",  devProp.minor);
+    printf("Major revision number:     %d\n",  prop.major);
+    printf("Minor revision number:     %d\n",  prop.minor);
     printf("Number of Stream MultiProcessor : %d.\n", prop.multiProcessorCount);
     printf("Memory Clock Rate (KHz) : %d\n", prop.memoryClockRate);
     printf("Memory Bus Width (bits) : %d\n",prop.memoryBusWidth);
