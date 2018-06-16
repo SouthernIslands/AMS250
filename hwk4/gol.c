@@ -1,4 +1,4 @@
-#include <omp.h>
+//#include <omp.h>
 #include <stdio.h>
 #include <sys/time.h>
 
@@ -57,6 +57,7 @@ void print(char ** dish){
 void life(char ** current, char ** next){
     int row, col;
 
+//    #pragma omp parallel for private(row,col) shared(current,next)
     for(row = 0 ; row < GROW ; row++ ){
       for(col = 0 ; col < GCOL ; col++ ){
          int r, c, neighbor = 0;
@@ -93,7 +94,7 @@ void life(char ** current, char ** next){
 
 int main(){
   char **dish, **next;
-  int i, gens = 10;
+  int i, gens = 100;
   struct timeval tv;
   double start, stop, timespend;
 
@@ -108,16 +109,18 @@ int main(){
   start = (tv.tv_sec)*1000 + (tv.tv_usec)/1000;
 
   for(i = 0 ; i < gens ; i++){
-     sleep(1);
+     //sleep(1);
      life(dish, next);
-     print(next);
+    //  print(next);
 
      dish = next;
   }
 
   gettimeofday(&tv,NULL);
   stop = (tv.tv_sec)*1000 + (tv.tv_usec)/1000;
-  timespend = stop - start - gens*1000;
+  timespend = stop - start;
+  // timespend = stop - start - gens*1000;
+  print(dish);
   printf("using %.8g milliseconds\n", timespend);
 
   printf("Program terminated....\n");
