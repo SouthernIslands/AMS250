@@ -47,15 +47,16 @@ void initDish(){
   }
 }
 
-void print(char ** dish){
+void print(char ** dish, int firstRow, int lastRow){
     // char ANSI_HOME[] = "\x1b[H";
     // printf( "%s", ANSI_HOME );
     int i;
 
-    for(i = 0 ; i < NUMBERROWS ; i++ ){
-       printf( "%s\n", dish[i] );
+    for (i=firstRow; i<=lastRow; i++ ) {
+    if ( dish[i] == NULL ) continue;
+    pos( i, 0 );
+    printf( "%s\n", dish[i] );
     }
-    printf("Running......\n");
 }
 // void life(char ** current, char ** next){
 //     int row, col;
@@ -219,11 +220,11 @@ int main(int argc, char* argv[]){
     // apply the rules of life to the current population and 
     // generate the next generation.
     life( dish, next, firstRow, lastRow );
-    if(rank == 0){
-      print(dish);
-      printf( "Rank %d: Generation %d\n\n", rank, i );
-    }
-    
+    // if(rank == 0){
+    //   print(dish);
+    //   printf( "Rank %d: Generation %d\n\n", rank, i );
+    // }
+
     //--- if rank is odd, then send ---
     //--- if rank is even, then receive ---
     if(rank % 2 == 0){ //even
@@ -246,7 +247,7 @@ int main(int argc, char* argv[]){
     next = temp;
   }
   
-  
+  print(dish, firstRow, lastRow);
  // pos( 30+rank, 0 );
   
   if(rank == 0 && i == gens){
