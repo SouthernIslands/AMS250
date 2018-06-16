@@ -136,23 +136,23 @@ void  life( char** dish, char** next, int lowerRow, int upperRow ) {
 
           if (r == row && j == i)
             continue; // current cell is not its neighbor
-          if (dish[realr][realj] == '#')
+          if (dish[realr][realj] == 'O')
             neighbors++;
         }
       }
 
-      if (current == '#') {
+      if (current == 'O') {
         if (neighbors < 2 || neighbors > 3)
-          next[row][i] =  ' ';
+          next[row][i] =  '*';
         else
-          next[row][i] = '#';
+          next[row][i] = 'O';
       }
 
-      if (current == ' ') {
+      if (current == '*') {
         if (neighbors == 3)
-          next[row][i] = '#';
+          next[row][i] = 'O';
         else
-          next[row][i] = ' ';
+          next[row][i] = '*';
       }
     }
   }
@@ -208,14 +208,14 @@ int main(int argc, char* argv[]){
 
   print(dish);
 
-  if(rank == 0){
+  if(rank == 0 && i == 0){
     gettimeofday(&tv,NULL);
     start = (tv.tv_sec)*1000 + (tv.tv_usec)/1000;
   }
 
   for ( i = 0; i < gens; i++) {
     
-    pos( 33+rank, 0 );
+   // pos( 33+rank, 0 );
     //printf( "Rank %d: Generation %d\n", rank, i );
 
     // apply the rules of life to the current population and 
@@ -244,20 +244,23 @@ int main(int argc, char* argv[]){
     next = temp;
   }
   
-  printf( "Process %d done.  Exiting\n\n", rank );
-  pos( 30+rank, 0 );
   
-  if(rank == 0){
+ // pos( 30+rank, 0 );
+  
+  if(rank == 0 && i == gens){
     print(dish);
     gettimeofday(&tv,NULL);
     stop = (tv.tv_sec)*1000 + (tv.tv_usec)/1000;
     timespend = stop - start;
-    printf("using %.8g milliseconds\n", timespend);
   }
-  
-  
+  MPI_Barrier(MPI_COMM_WORLD);
+  printf( "Process %d done.  Exiting\n\n", rank );
+
   MPI_Finalize();
-  
-  printf("Program terminated....\n");
+  if(rank == 0 && i == gens){
+    printf("using %.8g milliseconds\n", timespend);
+    printf("Program terminated....\n");
+    }
+    
   return 0;
 }
