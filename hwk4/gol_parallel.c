@@ -48,8 +48,8 @@ void initDish(){
 }
 
 void print(char ** dish){
-    char ANSI_HOME[] = "\x1b[H";
-    printf( "%s", ANSI_HOME );
+    // char ANSI_HOME[] = "\x1b[H";
+    // printf( "%s", ANSI_HOME );
     int i;
 
     for(i = 0 ; i < NUMBERROWS ; i++ ){
@@ -206,22 +206,24 @@ int main(int argc, char* argv[]){
   }  
 
 
-  print(dish);
-
   if(rank == 0 && i == 0){
+    print(dish);
     gettimeofday(&tv,NULL);
     start = (tv.tv_sec)*1000 + (tv.tv_usec)/1000;
   }
 
   for ( i = 0; i < gens; i++) {
     
-   // pos( 33+rank, 0 );
-    //printf( "Rank %d: Generation %d\n", rank, i );
-
+    // pos( 33+rank, 0 );
+    
     // apply the rules of life to the current population and 
     // generate the next generation.
     life( dish, next, firstRow, lastRow );
-
+    if(rank == 0){
+      print(dish);
+      printf( "Rank %d: Generation %d\n\n", rank, i );
+    }
+    
     //--- if rank is odd, then send ---
     //--- if rank is even, then receive ---
     if(rank % 2 == 0){ //even
@@ -254,13 +256,13 @@ int main(int argc, char* argv[]){
     timespend = stop - start;
   }
   MPI_Barrier(MPI_COMM_WORLD);
-  printf( "Process %d done.  Exiting\n\n", rank );
+  printf( "Process %d done.  Exiting\n", rank );
 
   MPI_Finalize();
   if(rank == 0 && i == gens){
     printf("using %.8g milliseconds\n", timespend);
     printf("Program terminated....\n");
     }
-    
+
   return 0;
 }
