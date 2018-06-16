@@ -2,25 +2,22 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-#define ROWSIZE 20
+#define ROWSIZE 40
 #define NUMBERROWS 10
-#define esc 27
-#define cls() printf("%c[2J",esc)
-#define pos(row,col) printf("%c[%d;%dH",esc,row,col)
 
 char *DISH0[NUMBERROWS];
 char *DISH1[NUMBERROWS];
 char *defau[NUMBERROWS] = {
-  "***OOOO*OO****OOO**O",
-  "O**OOO**OOO****O****",
-  "OO*OOO***********O**",
-  "**O**O***O**********",
-  "****OO**************",
-  "*O*******OOO*OOO****",
-  "****OO***O****OOO**O",
-  "O******O**O******O**",
-  "*O******OOO******O**",
-  "****OOO**OO******O**",
+  "***OOOO*OO****OOO****************OO*OO*O",
+  "O**OOO**OOO****O******************OO****",
+  "OO*OOO****************O**O***O*****O****",
+  "**O**O***O************O*****O***********",
+  "****OO**************OO*OOO*************O",
+  "*O*******OOO*OOO******O***************OO",
+  "****OO***O****OOO**OOO*OOO***********O**",
+  "O******O**O******O******O***********OO**",
+  "*O******OOO******O********************O*",
+  "****OOO**OO******O******************O*O*",
 };
 
 
@@ -58,42 +55,7 @@ void print(char ** dish, int firstRow, int lastRow){
     printf( "%s\n", dish[i] );
     }
 }
-// void life(char ** current, char ** next){
-//     int row, col;
 
-//     for(row = 0 ; row < NUMBERROWS ; row++ ){
-//       for(col = 0 ; col < ROWSIZE ; col++ ){
-//          int r, c, neighbor = 0;
-//          char temp = current[row][col];
-
-//          for(r = row - 1; r <= row + 1 ; r++ ){
-//             if(r == -1 || r == NUMBERROWS)continue;
-//             for(c = col - 1; c <= col + 1; c++){
-//                if(c == -1|| c == ROWSIZE)continue;
-//                if(c == col && r == row)continue;
-
-//                if(current[r][c] == 'O')neighbor++;
-//              }
-//          }
-//         //populated or underpopulated
-//          if(temp == 'O'){ // if this cell lives
-//             if(neighbor < 2 || neighbor > 3){
-//               next[row][col] = '*';
-//             }else{
-//               next[row][col] = 'O';
-//             }
-//          }
-
-//          if(temp == '*'){// if this cell died with 3 neighbors
-//             if(neighbor == 3){
-//               next[row][col] = 'O';
-//            }else{
-//             next[row][col] = '*';
-//            }
-//          }
-//       }
-//    }
-// }
 void  life( char** dish, char** next, int lowerRow, int upperRow ) {
   /*
    * Given an array of string representing the current population of cells
@@ -109,8 +71,7 @@ void  life( char** dish, char** next, int lowerRow, int upperRow ) {
     if ( dish[row] == NULL )
       continue;
 
-    for ( i = 0; i < rowLength; i++) { // each char in the
-                                       // row
+    for ( i = 0; i < rowLength; i++) { // each char in the row
 
       int r, j, neighbors = 0;
       char current = dish[row][i];
@@ -160,9 +121,11 @@ void  life( char** dish, char** next, int lowerRow, int upperRow ) {
 }
 
 int main(int argc, char* argv[]){
+  
   char **dish, **next, **temp;
-  int i, nextProcess, prevProcess;
+  int nextProcess, prevProcess;
   int gens = 10;
+  int i = 0;
   struct timeval tv;
   double start, stop, timespend;
   int n; // number of tasks/processes
@@ -183,7 +146,6 @@ int main(int argc, char* argv[]){
     n = noTasks; 
   } 
   
-
   cleanScreen();
   initDish();
 
@@ -207,15 +169,14 @@ int main(int argc, char* argv[]){
   }  
 
 
-  if(rank == 0 && i == 0){
-    print(dish);
+  if(i == 0){
+    print(dish, firstRow, lastRow);
+    printf("\n\n");
     gettimeofday(&tv,NULL);
     start = (tv.tv_sec)*1000 + (tv.tv_usec)/1000;
   }
 
-  for ( i = 0; i < gens; i++) {
-    
-    // pos( 33+rank, 0 );
+  for ( i = 0; i < gens; i++) {   
     
     // apply the rules of life to the current population and 
     // generate the next generation.
@@ -240,29 +201,28 @@ int main(int argc, char* argv[]){
       MPI_Send( next[firstRow],   ROWSIZE, MPI_CHAR,    prevProcess,     0,  MPI_COMM_WORLD );
     }
 
-
     // copy next to dish
     temp = dish;
     dish = next;
     next = temp;
   }
   
-  print(dish, firstRow, lastRow);
- // pos( 30+rank, 0 );
+ 
   
   if(rank == 0 && i == gens){
-    print(dish);
     gettimeofday(&tv,NULL);
     stop = (tv.tv_sec)*1000 + (tv.tv_usec)/1000;
     timespend = stop - start;
   }
+
+  print(dish, firstRow, lastRow);
   MPI_Barrier(MPI_COMM_WORLD);
   printf( "Process %d done.  Exiting\n", rank );
 
   MPI_Finalize();
   if(rank == 0 && i == gens){
-    printf("using %.8g milliseconds\n", timespend);
     printf("Program terminated....\n");
+    printf("using %.8g milliseconds\n", timespend);   
     }
 
   return 0;
