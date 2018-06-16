@@ -3,7 +3,7 @@
 #include <sys/time.h>
 
 #define ROWSIZE 40
-#define NUMBERROWS 10
+#define NUMBERROWS 16
 
 char *DISH0[NUMBERROWS];
 char *DISH1[NUMBERROWS];
@@ -18,6 +18,12 @@ char *defau[NUMBERROWS] = {
   "O******O**O******O******O***********OO**",
   "*O******OOO******O********************O*",
   "****OOO**OO******O******************O*O*",
+  "*******OOO******O***********O*********O*",
+  "*************O************OO**O*********",
+  "******OOO****************OOO***OO*******",
+  "*******O******************OO*OO*O****O**",
+  "**OOO****OO**OO*************************",
+  "****OOOO***O*********O*****OO***********",
 };
 
 
