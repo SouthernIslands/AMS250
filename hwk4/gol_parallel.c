@@ -4,6 +4,9 @@
 
 #define ROWSIZE 40
 #define NUMBERROWS 16
+#define esc 27
+#define cls() printf("%c[2J",esc)
+#define pos(row,col) printf("%c[%d;%dH",esc,row,col)
 
 char *DISH0[NUMBERROWS];
 char *DISH1[NUMBERROWS];
